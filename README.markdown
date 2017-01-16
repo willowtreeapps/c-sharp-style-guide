@@ -34,7 +34,7 @@ On the whole, naming should follow C# standards.
 
 ### Namespaces
 
-Namespaces are all **PascalCase**, multiple words concatenated together, without hypens ( - ) or underscores ( \_ ). Namespaces should **not** follow reverse domain conventions as is common in Java: 
+Namespaces are all **PascalCase**, multiple words concatenated together, without hyphens ( - ) or underscores ( \_ ). Namespaces should **not** follow reverse domain conventions as is common in Java: 
 
 **BAD**:
 
@@ -58,7 +58,9 @@ Methods are written in **PascalCase**. For example `DoSomething()`.
 
 ### Fields and Properties
 
-All private fields (including backing fields) are written with a preceding underscore in **camelCase**.  All Properties are written in **PascalCase**.
+All private and internal fields (including backing fields) are written with a preceding underscore in **camelCase**.  All Properties are written in **PascalCase**. 
+
+Fields should use explicit access modifiers (public, private) even if they are using the default access modifier.
 
 Public and protected fields should be avoided in favor of public properties.
 
@@ -68,7 +70,7 @@ For example:
 public class MyClass 
 {
     public int PublicField { get; set; }
-    int _packagePrivate;
+    private int _packagePrivate;
     private int _myBackedProperty;
     public int MyBackedProperty
     {
@@ -87,6 +89,7 @@ public class MyClass
 {
     private int myPrivateVariable;
     public int publicField;
+    int internalField;
 }
 ```
 
@@ -149,7 +152,7 @@ public delegate void Render()
 public delegate void RenderCallback()
 ```  
 
-In most cases is is may be better to use ***Action<T>*** or ***Func<T>*** for these over explicity declared callbacks.
+In most cases it may be better to use ***Action<T>*** or ***Func<T>*** for these over explicity declared callbacks.
 
 ### Events
 
