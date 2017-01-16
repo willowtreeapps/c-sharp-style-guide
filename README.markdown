@@ -1,14 +1,6 @@
-# The Official raywenderlich.com C# Style Guide
+# The WillowTree C# Style Guide
 
-This style guide is different from other you may see, because the focus is
-centered on readability for print and the web. We created this style guide to
-keep the code in our tutorials consistent.  
-
-Our overarching goals are **conciseness**, **readability** and **simplicity**. Also, this guide is written to keep **Unity** in mind. 
-
-## Inspiration
-
-This style guide is based on C# and Unity conventions. 
+Our overarching goals are **conciseness**, **readability** and **simplicity**.
 
 ## Table of Contents
 
@@ -33,8 +25,6 @@ This style guide is based on C# and Unity conventions.
 - [Brace Style](#brace-style)
 - [Switch Statements](#switch-statements)
 - [Language](#language)
-- [Copyright Statement](#copyright-statement)
-- [Smiley Face](#smiley-face)
 - [Credit](#credits)
 
 
@@ -44,18 +34,18 @@ On the whole, naming should follow C# standards.
 
 ### Namespaces
 
-Namespaces are all **PascalCase**, multiple words concatenated together, without hypens ( - ) or underscores ( \_ ):
+Namespaces are all **PascalCase**, multiple words concatenated together, without hypens ( - ) or underscores ( \_ ). Namespaces should **not** follow reverse domain conventions as is common in Java: 
 
 **BAD**:
 
 ```csharp
-com.raywenderlich.fpsgame.hud.healthbar
+com.willowtree.project.component
 ```
 
 **GOOD**:
 
 ```csharp
-RayWenderlich.FPSGame.HUD.Healthbar
+WillowTree.Project.Component
 ```
 
 ### Classes & Interfaces
@@ -66,39 +56,49 @@ Written in **PascalCase**. For example `RadialSlider`.
 
 Methods are written in **PascalCase**. For example `DoSomething()`. 
 
-### Fields
+### Fields and Properties
 
-All non-static fields are written **camelCase**. Per Unity convention, this includes **public fields** as well.
+All private fields (including backing fields) are written with a preceding underscore in **camelCase**.  All Properties are written in **PascalCase**.
+
+Public and protected fields should be avoided in favor of public properties.
 
 For example:
 
 ```csharp
 public class MyClass 
 {
-    public int publicField;
-    int packagePrivate;
-    private int myPrivate;
-    protected int myProtected;
+    public int PublicField { get; set; }
+    int _packagePrivate;
+    private int _myBackedProperty;
+    public int MyBackedProperty
+    {
+        get { return _myBackedProperty; }
+        set { _myBackedProperty = value; }
+    }
+
+    protected int MyProtected { get; set; }
 }
 ```
 
 **BAD:**
 
 ```csharp
-private int _myPrivateVariable
+public class MyClass 
+{
+    private int myPrivateVariable;
+    public int publicField;
+}
 ```
 
-**GOOD:**
+The one exception to this is if you are working with Unity. These standards go against Unity convention, and you should feel free to ignore them in that case.
 
-```csharp
-private int myPrivateVariable
-```
 
 Static fields are the exception and should be written in **PascalCase**:
 
 ```csharp
-public static int TheAnswer = 42;
+public static readonly int TheAnswer = 42;
 ```
+
 
 ### Parameters
 
@@ -112,16 +112,18 @@ void doSomething(Vector3 Location)
 **GOOD:**
 
 ```csharp
-void doSomething(Vector3 location)
+void DoSomething(Vector3 location)
 ```
 
 Single character values are to be avoided except for temporary looping variables.
 
-### Delegates
+### Delegates and EventHandlers
 
 Delegates are written in **PascalCase**.
 
 When declaring delegates, DO add the suffix **EventHandler** to names of delegates that are used in events. 
+
+By converntion, .NET event handlers always take 2 parameters: a sender and an EventArgs derived class. You should follow this convention when declaring event handlers.
 
 **BAD:**
 
@@ -131,7 +133,7 @@ public delegate void Click()
 **GOOD:**
 
 ```csharp
-public delegate void ClickEventHandler()
+public delegate void ClickEventHandler(object sender, EventArgs e)
 ```  
 
 DO add the suffix **Callback** to names of delegates other than those used as event handlers.
@@ -147,21 +149,29 @@ public delegate void Render()
 public delegate void RenderCallback()
 ```  
 
+In most cases is is may be better to use ***Action<T>*** or ***Func<T>*** for these over explicity declared callbacks.
+
 ### Events
 
-Prefix event methods with the prefix **On**.
-
-**BAD:**
-
-```csharp
-public static event CloseCallback Close;
-```  
+Following Microsoft's naming conventions on events:
+* **DO** name events with a verb or a verb phrase.
+* **DO** give events names with a concept of before and after, using the present and past tenses. For example, a close event that is raised before a window is closed would be called Closing, and one that is raised after the window is closed would be called Closed.
+* **DO NOT** use "Before" or "After" prefixes or postfixes to indicate pre- and post-events. Use present and past tenses as just described.
+* **DO** name event argument classes with the "EventArgs" suffix
+* **DO NOT** prefix events with **On**. This should be reserved for protected virtual methods used to raise events.
 
 **GOOD:**
 
 ```csharp
-public static event CloseCallback OnClose;
+public event ClosedEventHandler Closed;
 ```
+
+**BAD:**
+
+```csharp
+public event CloseCallback OnClose;
+```  
+
 
 ### Misc
 
@@ -210,6 +220,8 @@ string twitterHandle;
 
 Exactly one class per source file, although inner classes are encouraged where scoping appropriate.
 
+Interfaces that have one explicit implementation (service classes for example) *may* be declared in the same file as the classes that implement them.
+
 ### Interfaces
 
 All interfaces should be prefaced with the letter **I**. 
@@ -227,8 +239,6 @@ IRadialSlider
 ```
 
 ## Spacing
-
-Spacing is especially important in raywenderlich.com code, as code needs to be easily readable as part of the tutorial. 
 
 ### Indentation
 
@@ -274,17 +284,12 @@ CoolUiWidget widget =
     someIncrediblyLongExpression(that, reallyWouldNotFit, on, aSingle, line);
 ```
 
-### Line Length
-
-Lines should be no longer than **100** characters long.
-
 ### Vertical Spacing
 
 There should be exactly one blank line between methods to aid in visual clarity 
 and organization. Whitespace within methods should separate functionality, but 
 having too many sections in a method often means you should refactor into
 several methods.
-
 
 ## Brace Style
 
@@ -345,6 +350,7 @@ if (someTest)
 
 if (someTest) { doSomethingElse(); }
 ```
+
 ## Switch Statements
 
 Switch-statements come with `default` case by default (heh). When your code is written correctly, it should never reach this part.
@@ -392,52 +398,9 @@ string colour = "red";
 string color = "red";
 ```
 
-The exception here is `MonoBehaviour` as that's what the class is actually called.
-
-## Copyright Statement
-
-The following copyright statement should be included at the top of every source file:
-
-    /*
-     * Copyright (c) 2017 Razeware LLC
-     * 
-     * Permission is hereby granted, free of charge, to any person obtaining a copy
-     * of this software and associated documentation files (the "Software"), to deal
-     * in the Software without restriction, including without limitation the rights
-     * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-     * copies of the Software, and to permit persons to whom the Software is
-     * furnished to do so, subject to the following conditions:
-     * 
-     * The above copyright notice and this permission notice shall be included in
-     * all copies or substantial portions of the Software.
-     * 
-     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-     * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-     * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-     * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-     * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-     * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-     * THE SOFTWARE.
-     */
-
-## Smiley Face
-
-Smiley faces are a very prominent style feature of the raywenderlich.com site!
-It is very important to have the correct smile signifying the immense amount of happiness and excitement for the coding topic. The closing square bracket ] is used because it represents the largest smile able to be captured using ASCII art. A closing parenthesis ("**:)**") creates a half-hearted smile, and thus is not preferred.
-
-**BAD**:
-
-:)
-
-**GOOD**:
-
-:]  
-  
->> **NOTE**: Do not use smileys in your scripts.
-
 ## Credits
 
-This style guide is a collaborative effort from the most stylish
+This style guide was forked from the collaborative effort from the most stylish
 raywenderlich.com team members:
 
 - [Darryl Bayliss](https://github.com/DarrylBayliss)
