@@ -62,9 +62,20 @@ All private and internal fields (including backing fields) are written with a pr
 
 Fields should use explicit access modifiers (public, private) even if they are using the default access modifier.
 
-Public and protected fields should be avoided in favor of public properties.
+Public and protected fields should be avoided in favor of properties.
 
-For example:
+**BAD:**
+
+```csharp
+public class MyClass 
+{
+    private int myPrivateVariable;
+    public int publicField;
+    int internalField;
+}
+```
+
+**GOOD:**
 
 ```csharp
 public class MyClass 
@@ -82,21 +93,9 @@ public class MyClass
 }
 ```
 
-**BAD:**
-
-```csharp
-public class MyClass 
-{
-    private int myPrivateVariable;
-    public int publicField;
-    int internalField;
-}
-```
-
 The one exception to this is if you are working with Unity. These standards go against Unity convention, and you should feel free to ignore them in that case.
 
-
-Static fields are the exception and should be written in **PascalCase**:
+Static fields are the exception and should be written in **PascalCase**.
 
 ```csharp
 public static readonly int TheAnswer = 42;
@@ -118,7 +117,7 @@ void doSomething(Vector3 Location)
 void DoSomething(Vector3 location)
 ```
 
-Single character values are to be avoided except for temporary looping variables.
+Single character values are to be avoided except for temporary looping variables and for EventArgs parameters.
 
 ### Delegates and EventHandlers
 
@@ -133,6 +132,7 @@ By converntion, .NET event handlers always take 2 parameters: a sender and an Ev
 ```csharp
 public delegate void Click()
 ```
+
 **GOOD:**
 
 ```csharp
@@ -163,18 +163,46 @@ Following Microsoft's naming conventions on events:
 * **DO** name event argument classes with the "EventArgs" suffix
 * **DO NOT** prefix events with **On**. This should be reserved for protected virtual methods used to raise events.
 
-**GOOD:**
-
-```csharp
-public event ClosedEventHandler Closed;
-```
-
 **BAD:**
 
 ```csharp
 public event CloseCallback OnClose;
 ```  
 
+**GOOD:**
+
+```csharp
+public event ClosedEventHandler Closed;
+```
+
+* **DO NOT** Use anonymous delegate to subscribe to events in Xamarin. This can cause memory leaks you are unable to unregister from the event (and the anonymous delegate strong captures 'this')
+* **DO** Unsubscribe / resubscribe from events when it makes sense to avoid memory leaks
+* **GENERALLY** Unless multiple subscription is required, try to avoid C# events in Xamarin.
+
+**BAD**
+
+```csharp
+this.Closed += (sender, args) {
+    if(args.IsTrue)
+    {
+        PerformActions(args);
+    }
+}
+```
+
+**GOOD**
+
+```csharp
+public override void ViewDidAppear()
+{
+    this.Closed += FrameClosed;
+}
+
+public override void ViewDidDisappear()
+{
+    this.Closed -= FrameClosed;
+}
+```
 
 ### Misc
 
@@ -200,7 +228,7 @@ findPostById
 
 ### Access Level Modifiers
 
-Access level modifiers should be explicitly defined for classes, methods and member variables.
+Access level modifiers should be explicitly defined for classes, methods and member variables. Avoid using default visibility.
 
 ### Fields & Variables
 
@@ -215,8 +243,8 @@ string username, twitterHandle;
 **GOOD:**
 
 ```csharp
-string username;
-string twitterHandle;
+private string _username;
+private string _twitterHandle;
 ```
 
 ### Classes
@@ -331,8 +359,36 @@ class MyClass
 }
 ```
 
-Conditional statements are always required to be enclosed with braces,
-irrespective of the number of lines required.
+The one exception to braces on their own line is for anonymous functions, where the brace should go on the same line.
+
+**BAD:**
+
+```csharp
+Filter( (x) 
+    {
+        if(x.IsComplicated)
+        {
+            return x > 5 + x.FirstSum;
+        }
+
+        return x < 4 + x.SecondSum;
+    });
+```
+
+**GOOD:**
+
+```csharp
+Filter( (x) {
+        if(x.IsComplicated)
+        {
+            return x > 5 + x.FirstSum;
+        }
+
+        return x < 4 + x.SecondSum;
+    });
+```
+
+Conditional statements are always required to be enclosed with braces, irrespective of the number of lines required.
 
 **BAD:**
 
