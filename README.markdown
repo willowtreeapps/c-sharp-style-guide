@@ -16,6 +16,7 @@ Our overarching goals are **conciseness**, **readability** and **simplicity**.
 - [Declarations](#declarations)
   + [Access Level Modifiers](#access-level-modifiers)
   + [Fields & Variables](#fields--variables)
+  + [Implicitly Typed Local Variables](#implicitly-typed-local-variables)
   + [Classes](#classes)
   + [Interfaces](#interfaces)
 - [Spacing](#spacing)
@@ -247,6 +248,67 @@ private string _username;
 private string _twitterHandle;
 ```
 
+### Implicitly Typed Local Variables
+
+Use implicit typing for local variables when the type of the variable is obvious from the right side of the assignment, or when the precise type is not important.
+
+**GOOD:**
+```csharp
+// When the type of a variable is clear from the context, use var 
+// in the declaration.
+var var1 = "This is clearly a string.";
+var var2 = 27;
+var var3 = Convert.ToInt32(Console.ReadLine());
+```
+
+Do not use var when the type is not apparent from the right side of the assignment.
+
+**GOOD:**
+```csharp
+// When the type of a variable is not clear from the context, use an
+// explicit type.
+int var4 = ExampleClass.ResultSoFar();
+```
+
+Do not rely on the variable name to specify the type of the variable. It might not be correct.
+
+**BAD:**
+```csharp
+// Naming the following variable inputInt is misleading. 
+// It is a string.
+var inputInt = Console.ReadLine();
+Console.WriteLine(inputInt);
+```
+
+Avoid the use of var in place of dynamic.
+
+Use implicit typing to determine the type of the loop variable in for and foreach loops.
+
+**GOOD:**
+
+for Loop
+```csharp
+var syllable = "ha";
+var laugh = "";
+for (var i = 0; i < 10; i++)
+{
+    laugh += syllable;
+    Console.WriteLine(laugh);
+}
+```
+
+foreach Loop
+```csharp
+foreach (var ch in laugh)
+{
+    if (ch == 'h')
+        Console.Write("H");
+    else
+        Console.Write(ch);
+}
+Console.WriteLine();
+```
+
 ### Classes
 
 Exactly one class per source file, although inner classes are encouraged where scoping appropriate.
@@ -468,4 +530,6 @@ raywenderlich.com team members:
 - [Brian Moakley](https://github.com/VegetarianZombie)
 - [Ray Wenderlich](https://github.com/rwenderlich)
 - [Eric Van de Kerckhove](https://github.com/BlackDragonBE)
+
+And some guidelines pulled from Microsoft's [C# Coding Conventions](https://msdn.microsoft.com/en-us/library/ff926074.aspx)
 
