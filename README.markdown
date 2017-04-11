@@ -250,7 +250,7 @@ private string _twitterHandle;
 
 ### Implicitly Typed Local Variables
 
-Use implicit typing for local variables when the type of the variable is obvious from the right side of the assignment, or when the precise type is not important.
+Use implicit typing for local variables when the type of the variable is obvious from the right side of the assignment, or when the compiler would not be able to correctly determine the type.
 
 **GOOD:**
 ```csharp
@@ -261,7 +261,7 @@ var var2 = 27;
 var var3 = Convert.ToInt32(Console.ReadLine());
 ```
 
-Do not use var when the type is not apparent from the right side of the assignment.
+Explicitly type the variable when the compiler would not be able to correctly determine the type, or explicitly typing would add pertinent information.
 
 **GOOD:**
 ```csharp
