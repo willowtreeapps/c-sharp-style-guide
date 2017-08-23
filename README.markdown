@@ -7,6 +7,7 @@ Our overarching goals are **conciseness**, **readability** and **simplicity**.
 - [Nomenclature](#nomenclature)
   + [Namespaces](#namespaces)
   + [Classes & Interfaces](#classes--interfaces)
+  + [Enums](#enums)
   + [Methods](#methods)
   + [Fields](#fields)
   + [Parameters](#parameters--parameters)
@@ -52,6 +53,34 @@ WillowTree.Project.Component
 ### Classes & Interfaces
 
 Written in **PascalCase**. For example `RadialSlider`. 
+
+### Enums
+
+Names of enumeration types (also called enums) in general should follow the standard type-naming rules (PascalCasing, etc.).
+
+Enum type names should also use a singular type.
+
+Enum type names types should not include an "Enum", "Flag", or "Flags" suffix.
+
+Enum values should not include a prefix that references the name of the enumeration type.
+
+**BAD:**
+```csharp
+public enum Cases
+{
+    CaseFirst,
+    CaseSecond
+}
+```
+
+**GOOD:**
+```csharp
+public enum Case
+{
+    First,
+    Second
+}
+```
 
 ### Methods
 
@@ -531,5 +560,5 @@ raywenderlich.com team members:
 - [Ray Wenderlich](https://github.com/rwenderlich)
 - [Eric Van de Kerckhove](https://github.com/BlackDragonBE)
 
-And some guidelines pulled from Microsoft's [C# Coding Conventions](https://msdn.microsoft.com/en-us/library/ff926074.aspx)
+And some guidelines pulled from Microsoft's [C# Coding Conventions](https://msdn.microsoft.com/en-us/library/ff926074.aspx) and [.NET Design Guidelines](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines)
 
